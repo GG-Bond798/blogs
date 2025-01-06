@@ -151,85 +151,44 @@
       <div class="post-content">
         <h2 id="Overview">Overview</h2>
         <p>
-          Before explaining what a transformer is, let's review RNNs first.
-          RNNs can perform well in many tasks, especially with three-dimensional datasets, but their limitations are also very apparent.
+          Contextual postfiltering is a technique used in recommender systems to refine recommendation lists based on contextual information, enhancing relevance and personalization. 
+          This approach adjusts the outputs of a recommendation model by considering contextual factors such as time, location, and user state, which influence user preferences and decision-making processes.
         </p>
-
-        <p>
-          The Figure 1 shows a simple two-layer LSTM. We can easily observe a disadvantage of RNNs: the network must execute sequentially.
-          In an NLP task, it first needs to calculate (Purple Box) and get a representation of the first position (Red Box), then calculate the representation of the second position, and so on.
-        </p>
-
-        <img src="./imgs/transformer/transformer-overview-lstm.png" alt="Cross Entropy Illustration" />
-        <p class="image-description">Figure 1: Simple two-layer LSTM structure</p>
-        
-        <p>
-          In this case, the neural network cannot fully use the GPU for parallel computing, which is inefficient and results in wasted resources.
-          Although RNNs have many variants, such as GRUs and LSTMs, they still require attention mechanisms to address issues like information bottlenecks.
-        </p>
-
-        <p>
-          Can we completely abandon RNNs for NLP tasks?
-        </p>
-
-        
-
-        <p>
-          The answer is obviously YES!!! Google researchers published "Attention Is All You Need" in 2017. The title itself answers this question.
-        </p>
-
-
-        <p>
-          Well, let's first take a closer look at the transformer strucuter. 
-          We can see that it is also an encoder and decoder structure.
-          The encoder is outlined in red, and the decor is represented in blue.
-        </p>
-
-
         <img src="./imgs/transformer/transformer-overview-encode-decode.png" alt="Cross Entropy Illustration" />
-        <p class="image-description">Figure 2: Transformer sturcture with encoder and decoder</p>
 
 
 
-        <p>
-          The first layer is input layer. 
-          In NLP task, the input most likely as a text, the first layer is going to devide the input text to many small unit(called token).
-        </p>
 
-        <p>
-          There are two key differences compared to RNNs.
-          First, the transformer uses BPE (Byte Pair Encoding) to divide the input text.
-          Second, the transformer incorporates the position of tokens in the sequence, a feature known as positional encoding.
-        </p>
-        
-        <img src="./imgs/transformer/transformer-overview-input.png" alt="Cross Entropy Illustration" />
-        <p class="image-description">Figure 3: Transformer sturcture input layer</p>
-        
-        <p>
-          Next is a main component of the transformer, which is a stack of several encoder/decoder blocks. 
-        </p>
 
-        <p>
-          It is worth noting that the blocks in different layers of the encoder/decoder blocks have exactly the same structure, 
-          and with the only difference being their parameters. 
-          This is how the transformer achieves a deeper and more expressive model through this stacking approach in NLP.
-        </p>
-
-        <img src="./imgs/transformer/transformer-overview-middle.png" alt="Cross Entropy Illustration" />
-        <p class="image-description">Figure 3: Transformer sturcture main network</p>
-
-        <p>
-          The final layer is simply a linear output layer followed by a softmax function to produce a probability distribution.
-          During training, it still uses cross-entropy loss\[H(p, q) = - \sum_{i=1}^{N} p(i) \log q(i)\] to update the model's weights.
-        </p>
-
-        <img src="./imgs/transformer/transformer-overview-output.png" alt="Cross Entropy Illustration" />
-        <p class="image-description">Figure 4: Transformer sturcture output layer</p>
         
 
-        <p>
-          This is the overview of the Transformer structure.
-        </p>
+        <h2 id="theoretical-background">Theoretical Background</h2>
+        <p>Contextual postfiltering is a subcategory of contextual recommendation strategies, which include pre-filtering, post-filtering, and contextual modeling. 
+          In post-filtering, the context is used after generating recommendations to filter or re-rank them. This is distinct from pre-filtering, where the context is used to modify the data input to the recommendation algorithm, 
+          and contextual modeling, where context is directly integrated into the recommendation algorithm itself.</p>
+          
+          <head>
+            <script type="text/javascript" async
+              src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+            </script>
+          </head>
+          <body>
+            <div class="content-container">
+              <h2 id="cross-entropy-formula">Cross-Entropy Formula</h2>
+              <p style="text-align: center; font-size: 1.2rem;">
+                \[
+                H(p, q) = - \sum_{i=1}^{N} p(i) \log q(i)
+                \]
+              </p>
+              <p>
+                Here, \( p(i) \) is the true distribution, \( q(i) \) is the predicted distribution, and \( N \) is the number of classes.
+              </p>
+            </div>
+          </body>
+          
+          <p class="image-description">Figure 1: A visual representation of cross-entropy and its relationship to probability probability probability probability probability probability probability distrasdasdasdibutions.</p>
+
+
 
       </div>
       <a href="../index.html" class="back-link">&larr; Back to Home</a>
@@ -242,9 +201,5 @@
 </body>
 </html>
 
-
-<script type="text/javascript" async
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
 
 
