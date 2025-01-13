@@ -9,7 +9,7 @@
 
 ## Overview
 
-Before explaining what a transformer is, let's review RNNs first.RNNs can perform well in many tasks, especially with three-dimensional datasets, but their limitations are also very apparent.
+Before explaining what a transformer is, let's review RNNs first. RNNs can perform well in many tasks, especially with three-dimensional datasets, but their limitations are also very apparent.
 
 The Figure 1 shows a simple two-layer LSTM. We can easily observe a disadvantage of RNNs: the network must execute sequentially. In an NLP task, it first needs to calculate (Purple Box) and get a representation of the first position (Red Box), then calculate the representation of the second position, and so on.
 
@@ -116,7 +116,7 @@ The encoder mainly consists of two parts: multi-head attention and a feed-forwar
 
 ### Multi-Head Attention
 
-#### Attention Layer
+#### Self-Attention Layer
 
 In transformer, the input to the attention layer consists of a query (q) and a set of key-value (k, v) pairs. The queries and keys are vectors with a dimension of $d_k$ and values are vetors with dimension $d_v$
 
@@ -133,6 +133,38 @@ The output is a N attention score, which calculated as  weighted sum of the valu
 If we have many queries, we can combine them into a single large query matrix (Q) and apply the same process for each query (q). The formula can be expressed as:
 
 \\[A(Q, K, V) = softmax(QK^T)V\\]
+
+To explain the formula in more detail: assume we have two queries as input. We transform $K$ and perform a multiplication with $Q$ to compute the attention scores. By applying the softmax function, we obtain the attention score distribution. Afterward, we multiply the result by $V$ to get the output corresponding to the queries.
+
+![Figure 6: Transformer Attention](./imgs/transformer/transformer-transformerblock-attention.png)
+
+Once we have the same size like queries, we have stack more and more layer based on that since the size of the input and output are the same size.
+
+#### Scaled Dot-Product Self-Attention
+
+We can see one problem from that formula: The computation of attention relies on the dot product of $Q×K^T$. As $d_k$ increases, the variance of the dot product $Q×K^T$ also increases. This can lead to extremely large values in the resulting attention scores, causing the softmax function to produce overly sharp distributions and gradient gets smaller.
+
+To solve this problem, we need to divide by $\sqrt{d_k}$, that can make sure the variance still be 1 and prevent the overly sharp distributions.
+
+$$
+A(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+$$
+
+
+Next, we concatenate the outputs of the different heads together. The computations are the same as in self-attention, but each head uses different weight matrices. The Input can just be the previous layers output or the input embedding. The output will get into the Feed-Forward Network with *Residual connection* and *Layer Normalization* techniques.
+
+For a single attention head:
+$$
+\text{head}_i = A(QW_i^Q, KW_i^K, VW_i^V)
+$$
+
+For multi-head attention:
+$$
+\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)W^O
+$$
+
+![Figure 7: Multi-Head Attention](./imgs/transformer/transformer-overview-encode-multihead.png)
+
 
 
 ### Feed-Forward Network (2 layer MLP)
