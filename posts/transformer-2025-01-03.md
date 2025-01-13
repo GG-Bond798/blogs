@@ -5,19 +5,21 @@
 - [Overview](#overview)
 - [Encoding](#encoding)
 - [Transformer Block Encoder](#transformer-block-encoder)
+- [Transformer Block Decoder](#transformer-block-decoder)
+
 
 
 ## Overview
 
-Before explaining what a transformer is, let's review RNNs first. RNNs can perform well in many tasks, especially with three-dimensional datasets, but their limitations are also very apparent.
+Before explaining what a transformer is, let's review RNN first. RNN can perform well in many tasks, especially with three-dimensional datasets, but their limitations are also very apparent.
 
-The Figure 1 shows a simple two-layer LSTM. We can easily observe a disadvantage of RNNs: the network must execute sequentially. In an NLP task, it first needs to calculate (Purple Box) and get a representation of the first position (Red Box), then calculate the representation of the second position, and so on.
+The Figure 1 shows a simple two-layer LSTM. We can easily observe a disadvantage of RNN: the network must execute sequentially. In an NLP task, it first needs to calculate (Purple Box) and get a representation of the first position (Red Box), then calculate the representation of the second position, and so on.
 
 ![Figure 1: Simple two-layer LSTM structure](./imgs/transformer/transformer-overview-lstm.png)
 
-In this case, the neural network cannot fully use the GPU for parallel computing, which is inefficient and results in wasted resources. Although RNNs have many variants, such as GRUs and LSTMs, they still require attention mechanisms to address issues like information bottlenecks.
+In this case, the neural network cannot fully use the GPU for parallel computing, which is inefficient and results in wasted resources. Although RNN have many variants, such as GRUs and LSTMs, they still require attention mechanisms to address issues like information bottlenecks.
 
-Can we completely abandon RNNs for NLP tasks?
+Can we completely abandon RNN for NLP tasks?
 
 The answer is obviously YES!!! Google researchers published "Attention Is All You Need" in 2017. The title itself answers this question.
 
@@ -27,7 +29,7 @@ Well, let's first take a closer look at the transformer strucuter. We can see th
 
 The first layer is input layer. In NLP task, the input most likely as a text, the first layer is going to devide the input text to many small unit(called token).
 
-There are two key differences compared to RNNs. First, the transformer uses BPE (Byte Pair Encoding) to divide the input text. Second, the transformer incorporates the position of tokens in the sequence, a feature known as positional encoding.
+There are two key differences compared to RNN. First, the transformer uses BPE (Byte Pair Encoding) to divide the input text. Second, the transformer incorporates the position of tokens in the sequence, a feature known as positional encoding.
 
 ![Figure 3: Transformer sturcture input layer](./imgs/transformer/transformer-overview-input.png)
 
@@ -114,9 +116,8 @@ The encoder mainly consists of two parts: multi-head attention and a feed-forwar
 
 ![Figure 5: Transformer Encoder](./imgs/transformer/transformer-transformerblock-encode.png)
 
-### Multi-Head Attention
 
-#### Self-Attention Layer
+### Self-Attention Layer
 
 In transformer, the input to the attention layer consists of a query (q) and a set of key-value (k, v) pairs. The queries and keys are vectors with a dimension of $d_k$ and values are vetors with dimension $d_v$
 
@@ -140,7 +141,7 @@ To explain the formula in more detail: assume we have two queries as input. We t
 
 Once we have the same size like queries, we have stack more and more layer based on that since the size of the input and output are the same size.
 
-#### Scaled Dot-Product Self-Attention
+### Scaled Dot-Product Self-Attention
 
 We can see one problem from that formula: The computation of attention relies on the dot product of $Q×K^T$. As $d_k$ increases, the variance of the dot product $Q×K^T$ also increases. This can lead to extremely large values in the resulting attention scores, causing the softmax function to produce overly sharp distributions and gradient gets smaller.
 
@@ -150,6 +151,7 @@ $$
 A(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
 
+### Multi-Head Attention
 
 Next, we concatenate the outputs of the different heads together. The computations are the same as in self-attention, but each head uses different weight matrices. The Input can just be the previous layers output or the input embedding. The output will get into the Feed-Forward Network with *Residual connection* and *Layer Normalization* techniques.
 
@@ -165,15 +167,23 @@ $$
 
 ![Figure 7: Multi-Head Attention](./imgs/transformer/transformer-overview-encode-multihead.png)
 
-
-
-### Feed-Forward Network (2 layer MLP)
+<!-- ![Figure 7: Multi-Head Attention](./imgs/transformer/transformer_decoding_2.gif) -->
 
 
 ### Tricks 
 
 **Residual Connection:** Inspired by ResNet, it allows the direct addition of the input and output, which helps mitigate the problem of vanishing gradients when the model becomes too deep.
-
 **Layer Normalization:** Transforms the vector into a distribution with a mean of 0 and a variance of 1. This technique addresses the issues of vanishing gradients and exploding gradients.
 
+
+
+## Transformer Block Decoder
+
+The Transformer decoder block is very similar to the encoder block, but there are two key differences. First, the initial layer uses 'Masked Multi-Head Attention' instead of 'Multi-Head Attention'. This masking prevents the model reach the future words in the sequence. Second, in the Multi-Head Attention layer of the decoder, the $K$ and $V$ come from the encoder block, and the $Q$ are derived from the output of the 'Masked Multi-Head Attention' layer. It is important to note that the decoder block can be stacked multiple times to increase model capacity as encoder block.
+
+![Figure 8: Transformer Decoder Overview](./imgs/transformer/transformer-overview-decode.png)
+
+When performing Masked Multi-Head Attention, we replace the values in the top-right corner of the attention matrix with **negative infinity**. This ensures that when we apply the softmax function, those values become 0. Then, when the softmax is multiplied by $V$ and only the second row of the output matrix is affected, while the first row stay the same. This mechanism make sure that when the model predict the second position, it does not reference any information from positions $i+1$ or beyond.
+
+![Figure 9: Transformer Decoder Matrix Calculation](./imgs/transformer/transformer-decode-matrix.png)
 
