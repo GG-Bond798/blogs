@@ -3,7 +3,6 @@
 *Published on 2025-01-05 in [AI](../topics/ai.html)*
 
 - [Overview](#overview)
-- [Encoding](#encoding)
 - [Transformer Block Encoder](#transformer-block-encoder)
 - [Transformer Block Decoder](#transformer-block-decoder)
 
