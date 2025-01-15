@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Genghua's Blog</title>
+  <link rel="icon" href="imgs/Pigman.png" type="image/x-icon">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
   <link rel="stylesheet" href="static/css/style.css"/>
   <style>
@@ -101,6 +102,20 @@
       margin-top: 2rem;
       color: #555;
     }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: #333;
+    }
+    .logo img {
+      margin-right: 0.5rem;
+      width: 30px; /* Reduced size */
+      height: 30px; /* Reduced size */
+    }
   </style>
   
 </head>
@@ -108,7 +123,10 @@
 <div class="page-wrapper">
   <header>
     <div class="header-container">
-      <a href="index.html" class="logo">Genghua's Blog</a>
+      <a href="index.html" class="logo">
+        <img src="imgs/Pigman.png" alt="Logo">
+        Genghua's Blog
+      </a>
       <nav>
         <a href="index.html" class="active">Home</a>
         <a href="topics/index.html">Topics</a>
