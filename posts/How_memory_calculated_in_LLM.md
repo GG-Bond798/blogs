@@ -122,11 +122,11 @@ If your goal is to complete the training in a reasonable time (say, 1 week or 16
 
 | Modules                 | Fully fine-tuned | Partial fine-tuned (LoRA) | Partial fine-tuned (QLoRA) |
 |-------------------------|------------------|---------------------------|----------------------------|
-| Model Weights           | 2 GB            | 2 GB                      | 1 GB                       |
-| Gradient                | 2 GB            | 2 GB × 0.02 = 0.04 GB     | 2 GB × 0.02 = 0.04 GB      |
-| Optimizer States (SGD)  | 8 GB            | 8 GB × 0.02 = 0.16 GB     | 8 GB × 0.02 = 0.16 GB      |
-| Others (Activation)     | Constant         | Constant                  | Constant                   |
-| Adapter Weights         | N/A             | 2 GB × 0.02 = 0.04 GB     | 2 GB × 0.02 = 0.04 GB      |
+| **Model Weights**           | 2 GB            | 2 GB                      | 1 GB                       |
+| **Gradient**                | 2 GB            | 2 GB × 0.02 = 0.04 GB     | 2 GB × 0.02 = 0.04 GB      |
+| **Optimizer States (SGD)**  | 8 GB            | 8 GB × 0.02 = 0.16 GB     | 8 GB × 0.02 = 0.16 GB      |
+| **Others (Activation)**     | Constant         | Constant                  | Constant                   |
+| **Adapter Weights**         | N/A             | 2 GB × 0.02 = 0.04 GB     | 2 GB × 0.02 = 0.04 GB      |
 | **Total**               | **12 GB**       | **2.24 GB**               | **1.24 GB**                |
 
 ### Example 2
