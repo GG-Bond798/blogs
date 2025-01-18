@@ -3,15 +3,15 @@
       {
         "title": "Transformer Explainations",
         "filename": "transformer-2025-01-03.html",
-        "date": "2025-01-05",
-        "excerpt": "    ",
+        "date": "2025-01-06",
+        "excerpt": "",
         "readingTime": 30,
         "author": "Genghua"
       },
       {
         "title": "Language Model Training Resource Expectation",
-        "filename": "How_memory_calculated_in_LLM.html",
-        "date": "2025-01-15",
+        "filename": "llm_memory_estimations.html",
+        "date": "2025-01-16",
         "excerpt": "    ",
         "readingTime": 10,
         "author": "Genghua"
