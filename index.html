@@ -118,12 +118,24 @@
     }
 
     .lillogo {
-    max-width: 100%; /* Ensures the image scales within its container */
-    height: auto; /* Maintains aspect ratio */
-    width: 25px; /* You can adjust this to your preferred size */
-    margin: -5px auto; /* Centers the image with some margin */
-    /* display: block;  */
-}
+      max-width: 100%; /* Ensures the image scales within its container */
+      height: auto; /* Maintains aspect ratio */
+      width: 25px; /* You can adjust this to your preferred size */
+      margin: -5px auto; /* Centers the image with some margin */
+    }
+   
+    .excerpt {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 3;
+      max-width: 600px;
+      line-height: 1.5rem;
+      white-space: normal;
+    }
+
+
   </style>
   
 </head>
@@ -208,7 +220,9 @@
           <a href="posts/${post.filename}">
             <h2>${post.title}</h2>
           </a>
-          <p>${post.excerpt}</p>
+          <p class="excerpt">
+            ${post.excerpt}
+          </p>
           <p class="post-meta">
             Date: ${formattedDate}
             | Estimated Reading Time: ${post.readingTime} min

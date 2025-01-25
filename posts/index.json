@@ -4,7 +4,7 @@
         "title": "Transformer Explainations",
         "filename": "transformer-2025-01-03.html",
         "date": "2025-01-06",
-        "excerpt": "",
+        "excerpt": "Transformers leverage self-attention and parallelism to efficiently model sequence data",
         "readingTime": 30,
         "author": "Genghua"
       },
@@ -12,7 +12,7 @@
         "title": "Language Model Training Resource Expectation",
         "filename": "llm_memory_estimations.html",
         "date": "2025-01-16",
-        "excerpt": "    ",
+        "excerpt": "The resource estimates for training and inference language models",
         "readingTime": 10,
         "author": "Genghua"
       }
