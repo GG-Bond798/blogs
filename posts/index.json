@@ -9,6 +9,14 @@
         "author": "Genghua"
       },
       {
+        "title": "Golang Notes",
+        "filename": "go.html",
+        "date": "2025-01-27",
+        "excerpt": "Go Go Go",
+        "readingTime": 30,
+        "author": "Genghua"
+      },
+      {
         "title": "Language Model Training Resource Expectation",
         "filename": "llm_memory_estimations.html",
         "date": "2025-01-16",
