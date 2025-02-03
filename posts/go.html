@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
   <link rel="stylesheet" href="../static/css/style.css"/>
 
+  <!-- Highlight.js CSS for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+
   <!-- Marked Library -->
   <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
 
@@ -38,6 +41,9 @@
     onerror="console.error('Failed to load MathJax')"
     onload="console.log('MathJax loaded successfully')"
   ></script>
+
+  <!-- Highlight.js Library for syntax highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
   <style>
     /* Basic container styles */
@@ -183,7 +189,6 @@
       justify-content: center;
       width: 100%;
       max-width: 800px;
-      margin: 1.5rem auto;
     }
 
     .language-label {
@@ -243,6 +248,11 @@
       font-size: 0.9rem;
       line-height: 1.5;
       color: #333;
+    }
+
+    /* Override Highlight.js background on code elements */
+    pre code.hljs {
+      background: transparent !important;
     }
 
     /* Math Formula Styles */
@@ -477,6 +487,11 @@
           if (window.MathJax) {
             window.MathJax.typeset();
           }
+          
+          // Apply syntax highlighting to all code blocks
+          if (window.hljs) {
+            hljs.highlightAll();
+          }
 
           if (window.location.hash) {
             scrollToSection(window.location.hash.substring(1));
@@ -488,46 +503,46 @@
             '<p>Error loading content: ' + error.message + '</p>';
       });
 
-    // Global handler for copy buttons
-    document.addEventListener('click', function(e) {
-      if (e.target && e.target.classList.contains('copy-button')) {
-        const targetId = e.target.getAttribute('data-copy-target');
-        if (!targetId) return;
-        const codeElement = document.getElementById(targetId);
-        if (!codeElement) return;
+      // Global handler for copy buttons (if needed)
+      document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('copy-button')) {
+          const targetId = e.target.getAttribute('data-copy-target');
+          if (!targetId) return;
+          const codeElement = document.getElementById(targetId);
+          if (!codeElement) return;
 
-        // Get the text from the code block
-        const codeText = codeElement.innerText;
+          // Get the text from the code block
+          const codeText = codeElement.innerText;
 
-        // Use the Clipboard API
-        navigator.clipboard.writeText(codeText)
-          .then(() => {
-            // Temporarily change button text to "Copied!"
-            e.target.textContent = 'Copied!';
-            setTimeout(() => {
-              e.target.textContent = 'Copy';
-            }, 2000);
-          })
-          .catch(err => {
-            console.error('Failed to copy:', err);
-          });
-      }
-    });
-  });
-
-  function scrollToSection(id) {
-    var element = document.getElementById(id);
-    if (element) {
-      var headerHeight = document.querySelector('header').offsetHeight;
-      var elementPosition = element.getBoundingClientRect().top;
-      var offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
+          // Use the Clipboard API
+          navigator.clipboard.writeText(codeText)
+            .then(() => {
+              // Temporarily change button text to "Copied!"
+              e.target.textContent = 'Copied!';
+              setTimeout(() => {
+                e.target.textContent = 'Copy';
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('Failed to copy:', err);
+            });
+        }
       });
+    });
+
+    function scrollToSection(id) {
+      var element = document.getElementById(id);
+      if (element) {
+        var headerHeight = document.querySelector('header').offsetHeight;
+        var elementPosition = element.getBoundingClientRect().top;
+        var offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
-  }
-</script>
+  </script>
 </body>
 </html>
