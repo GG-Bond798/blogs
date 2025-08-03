@@ -17,11 +17,11 @@
         "author": "Genghua"
       },
       {
-        "title": "Book Logs: Machine Learning Interviews",
-        "filename": "book_logs_machine_learning_interview.html",
+        "title": "Machine Learning Basic Concepts",
+        "filename": "machineLearningBasicConcepts.html",
         "date": "2025-03-13",
-        "excerpt": "Machine Learning Interview Preparation.",
-        "readingTime": 30,
+        "excerpt": "Machine Learning Compcets, including LLM, CV, Recs, and so on.",
+        "readingTime": 75,
         "author": "Genghua"
       },
       {
