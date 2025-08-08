@@ -17,7 +17,7 @@
   - [Self-Supervised Learning](#self-supervised-learning)
   - [Reinforcement Learning](#reinforcement-learning)
 - [NLP](#nlp)
-  - [NLP Concepts](#nlp-concepts)
+  - [Encode-decode vs. Decode-only](#encode-decode-vs-decode-only)
   - [LSTM](#lstm)
   - [Transformer](#transformer)
   - [BERT](#bert)
@@ -25,8 +25,11 @@
   - [Data cleaning process for training Data](#data-cleaning-process-for-training-data)
   - [KV caching](#kv-caching)
   - [Model Quantization](#model-quantization)
+  - [BF16 vs. FP16](#bf16-vs-fp16)
   - [Finetuning](#finetuning)
     - [LoRA](#lora)
+  - [RAG](#rag)
+  - [Angentic RAG](#angentic-rag)
   - [Engineering](#engineering)
 - [Recommender System Algorithms](#recommender-system-algorithms)
   - [CF](#cf)
@@ -185,7 +188,13 @@ Ensemble methods can also be used to increase model performance when dealing wit
 ## Reinforcement Learning
 
 # NLP
-## NLP Concepts
+## Encode-decode vs. Decode-only
+
+**Encode-decode** models (T5, BART) use an encoder to process the input and compress it into a representation, then a decoder generates the output based on that representation. This is great for tasks like translation, summarization, or Q&A.
+
+**Decode-only** models (GPT) don't have a separate encoder; they treat both input and output as a single sequence and generate the response autoregressively, predicting one token at a time based on the previous ones. But in decode-only models like GPT, every time the model generates the next token, it processes the **entire sequence of previous tokens**, including the prompt. This is due to how transformer self-attention works.
+
+
 ## LSTM
 ## Transformer
 ## BERT
@@ -196,22 +205,34 @@ Ensemble methods can also be used to increase model performance when dealing wit
 ## Data cleaning process for training Data
 
 ## KV caching
-How kv caching save memory and computation?
+
+**Question： Why first token (TTFT) always slower than the rest of the token generations?**
+
+When generating the first token, the LLM must process the entire input prompt through all transformer layers. It computes the full set of key (K) and value (V) vectors for every token in the prompt, since there's no KV cache available at first round. This makes the first token generation significantly slower, especially with long prompts. 
+
+However, once this is done, the model caches the computed K/V pairs. For the next tokens, it only needs to compute the query for the new token and reuse the cached K/V from previous steps, meaning it doesn't need to recompute the entire prompt again. This caching mechanism drastically reduces computation, making subsequent token generations much faster.
+
+
+**Question： How kv caching save memory and computation?**
 
 It avoids recalculating attention projections for previous tokens, reducing both redundant compute and memory usage—especially helpful for long text generation.
 
 
-How batching save computation?
+**Follow-up Question： Why vLLM makes it so fast?**
+
+The vLLM innovated a new technique called **Pipelined KV Caching** to efficiently build the initial KV cache before the first token's generation phase. Also having a better KV memory management by using **PagedAttention (block-based)**. 
+
+
+In addition, vLLM improves KV memory efficiency with PagedAttention, a block-based memory management system that allocates and reuses fixed-size KV cache blocks. This solves the memory fragmentation problem in traditional KV caching, enables efficient batching across sequences of different lengths, and supports high-throughput, low-latency inference at scale.
+
+**Question： How batching save computation?**
 
 Processing multiple inputs in parallel lets a model use hardware (like GPUs) more efficiently. It increases throughput and reduces per-sample overhead.
 
 
-Dynamic batching
+**Dynamic batching vs. Static batching**
 
 Groups requests in real time to form batches whose size varies depending on incoming load, maximizing efficiency without waiting to accumulate full batches.
-
-
-Static batching
 
 Predefined batch size is fixed. You wait until that batch size is reached before processing—simple but may cause latency if traffic is sparse.
 
@@ -219,6 +240,23 @@ Predefined batch size is fixed. You wait until that batch size is reached before
 ## Model Quantization
 
 Reducing model size by converting weights/activations to lower precision (e.g. float16 or int8) without significantly reducing accuracy—great for faster inference and lower memory usage.
+
+
+## BF16 vs. FP16
+
+BF16 and FP32 have the same exponent size, so they cover the same range of values, but BF16 has ~3.5× fewer mantissa bits, so it can't distinguish values that are close together as well as FP32 can.
+
+
+**In Summary: **
+FP16: More precise, but easily overflows or underflows.
+BF16: Less precise, but can handle a much wider range, critical for gradients and activations during training.
+
+| Aspect               | FP32                         | BF16                                      |
+| -------------------- | ---------------------------- | ----------------------------------------- |
+| Precision (mantissa) | 23 bits (\~7 decimal digits) | 7 bits (\~3 decimal digits)               |
+| Range (exponent)     | Same                         | Same                                      |
+| Precision loss       | ❌ Minimal                    | ✅ \~3–4× less precise                     |
+| Impact on training   | N/A                          | **Often negligible** for LLMs, CNNs, etc. |
 
 
 ## Finetuning
@@ -244,6 +282,46 @@ PPO (Proximal Policy Optimization): RL algorithm that avoids large policy update
 RLHF (Reinforcement Learning from Human Feedback): Used for aligning LLMs with user preferences via reinforcement signals.
 
 DPO (Direct Preference Optimization): A newer RL approach optimizing pairwise preferences more efficiently than RLHF.
+
+
+## RAG
+
+RAG is a retriever is the component that finds the most relevant documents or text chunks from a knowledge base based on a user’s query.
+
+Basic Steps:
+
+1. Encodes the query into a vector
+     * Using a sentence embedding model (e.g., E5, MPNet, BERT)
+
+2. Searches the vector database (e.g., FAISS, Qdrant, Weaviate)
+     * Compares the query vector to document vectors
+     * Finds the top-K most similar document chunks
+
+3. Returns those documents
+     * These will be passed to the LLM to use as context
+
+
+## Angentic RAG
+
+Agentic RAG is an evolution of standard RAG where the system behaves more like a reasoning agent.
+
+Within Agentic RAG, there are multi step invloved, plan → retrieve → reason → refine. So it is like Automated + Thinking + Self-verification.
+
+
+1. Agent sees ambiguity → plans:
+
+     * Search for drug interactions
+
+     * Retrieve cardiology + pharmacology documents
+
+     * Cross-check Paxlovid ingredients
+
+2. Agent calls retriever multiple times
+
+3. Agent generates intermediate thoughts:
+
+    * “Found a potential risk with Ritonavir and statins.”
+
 
 ## Engineering
 
