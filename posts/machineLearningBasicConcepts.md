@@ -198,32 +198,73 @@ Ensemble methods can also be used to increase model performance when dealing wit
 ## KV caching
 How kv caching save memory and computation?
 
+It avoids recalculating attention projections for previous tokens, reducing both redundant compute and memory usage—especially helpful for long text generation.
+
+
 How batching save computation?
+
+Processing multiple inputs in parallel lets a model use hardware (like GPUs) more efficiently. It increases throughput and reduces per-sample overhead.
+
 
 Dynamic batching
 
+Groups requests in real time to form batches whose size varies depending on incoming load, maximizing efficiency without waiting to accumulate full batches.
+
+
 Static batching
 
+Predefined batch size is fixed. You wait until that batch size is reached before processing—simple but may cause latency if traffic is sparse.
+
+
 ## Model Quantization
+
+Reducing model size by converting weights/activations to lower precision (e.g. float16 or int8) without significantly reducing accuracy—great for faster inference and lower memory usage.
+
 
 ## Finetuning
 ### LoRA
 
+Low-Rank Adaptation: fine-tunes only small low-rank matrices added to a big pretrained model, making adaptation far more efficient in terms of training time and memory.
+
+
 What is RoPE?
+
+Rotary Positional Embedding: a way to encode position information directly into attention mechanisms via rotating query/key vectors—improves long-range handling and extrapolation.
+
 
 FFN?
 
+Feed‑Forward Network: the fully connected layer inside a transformer block (between attention sublayers). It applies pointwise nonlinear transformations to enhance model capacity.
+
+
 DPO/PPO/RLHF
+
+PPO (Proximal Policy Optimization): RL algorithm that avoids large policy updates for stability.
+
+RLHF (Reinforcement Learning from Human Feedback): Used for aligning LLMs with user preferences via reinforcement signals.
+
+DPO (Direct Preference Optimization): A newer RL approach optimizing pairwise preferences more efficiently than RLHF.
 
 ## Engineering
 
 OOM issue
 
+Out-of-memory errors (OOM) happen when models or batches exceed GPU/CPU memory. Mitigate with smaller batches, mixed precision, gradient checkpointing, or model sharding.
+
+
 API rate limit
+
+APIs often limit requests per time frame. Handle it by batching calls, adding rate-limit retries/backoff, or caching frequent responses.
+
 
 OOV problem during RAG system
 
+Out-of-vocabulary tokens appear in retrieval-augmented generation (RAG) when user query contains terms unknown to the tokenizer. Mitigate with subword tokenization or dynamic vocab updates.
+
+
 Chunking problem in RAG system
+
+When retrieving long documents, you might chunk them arbitrarily—this can break context or split important passages. Use smart chunking (sentence/paragraph-aware) or sliding windows to preserve coherence.
 
 
 
@@ -240,7 +281,7 @@ Chunking problem in RAG system
 ## Generative Adversarial Networks
 ## Additional Computer Vision Use Cases
 
-
+<!-- 
 
 Supervised, Unsupervised, and Reinforcement Learning
 Machine learning breaks down into three main types: supervised learning (learning from labeled data), unsupervised learning (finding patterns in unlabeled data), and reinforcement learning (learning through rewards and penalties via interaction with an environment).
@@ -360,4 +401,4 @@ Transfer Learning
 You take a pretrained vision model (like ResNet) and fine-tune it on your specific image dataset—it saves time and often gives better results.
 
 Generative Adversarial Networks
-GANs involve two competing networks—generator and discriminator—that learn to produce realistic synthetic data, like fake apple images or styles.
+GANs involve two competing networks—generator and discriminator—that learn to produce realistic synthetic data, like fake apple images or styles. -->

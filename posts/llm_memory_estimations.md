@@ -1,18 +1,17 @@
-# Language Model Training Resource Expectation
+# Language Model Training Resource Expectation <!-- omit in toc -->
 
 *Published on 2025-01-15 in [AI](../topics/ai.html)*
 
-- [Language Model Training Resource Expectation](#language-model-training-resource-expectation)
-  - [Inference](#inference)
-    - [Precision Table:](#precision-table)
-  - [Model Trining Size and Memory Requirements](#model-trining-size-and-memory-requirements)
-  - [GPU Memory Capacity](#gpu-memory-capacity)
-  - [Computational Throughput and Time](#computational-throughput-and-time)
-  - [Estimating the Number of A100 GPUs](#estimating-the-number-of-a100-gpus)
-  - [Model Training memory estimation examples](#model-training-memory-estimation-examples)
-    - [Example 1](#example-1)
-    - [Example 2](#example-2)
-  - [Conclusion](#conclusion)
+- [Inference](#inference)
+  - [Precision Table:](#precision-table)
+- [Model Trining Size and Memory Requirements](#model-trining-size-and-memory-requirements)
+- [GPU Memory Capacity](#gpu-memory-capacity)
+- [Computational Throughput and Time](#computational-throughput-and-time)
+- [Estimating the Number of A100 GPUs](#estimating-the-number-of-a100-gpus)
+- [Model Training memory estimation examples](#model-training-memory-estimation-examples)
+  - [Example 1](#example-1)
+  - [Example 2](#example-2)
+- [Conclusion](#conclusion)
 
 ## Inference
 
