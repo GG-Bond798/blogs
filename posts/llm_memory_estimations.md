@@ -18,7 +18,7 @@
 
 **FP32** is typically used for training because of its higher precision, but it’s less efficient for inference due to the larger memory footprint.
 
-Lower precision data types like **FP16**, **INT8**, and **INT4** are used for inference because they significantly reduce memory usage and computational cost without a substantial loss in model performance.
+Lower precision data types like **FP16**, **INT8**, and **INT4** are used for inference because they significantly reduce memory usage and computational cost without a substantial loss in model performance. FP4 is emerging in ultra-low precision settings and can reduce memory even further, though with more accuracy trade-offs.
 
 ### Precision Table:
 
@@ -26,7 +26,9 @@ Lower precision data types like **FP16**, **INT8**, and **INT4** are used for in
 |-----------|------------------------|--------------|
 | FP32      | ×4                     | 4 GB         |
 | FP16      | ×2                     | 2 GB         |
+| FP8       | ×1.5                   | 1.5GB        |
 | INT8      | ×1                     | 1 GB         |
+| FP4       | ×0.75                  | 0.75 GB      |
 | INT4      | ÷2                     | 0.5 GB       |
 
 ## Model Trining Size and Memory Requirements
@@ -120,26 +122,28 @@ If your goal is to complete the training in a reasonable time (say, 1 week or 16
 - **Model quantization** is set to **INT8**.
 
 
-| Modules                 | Fully fine-tuned | Partial fine-tuned (LoRA) | Partial fine-tuned (QLoRA) |
-|-------------------------|------------------|---------------------------|----------------------------|
-| **Model Weights**           | 2 GB            | 2 GB                      | 1 GB                       |
-| **Gradient**                | 2 GB            | 2 GB × 0.02 = 0.04 GB     | 2 GB × 0.02 = 0.04 GB      |
-| **Optimizer States (SGD)**  | 8 GB            | 8 GB × 0.02 = 0.16 GB     | 8 GB × 0.02 = 0.16 GB      |
-| **Others (Activation)**     | Constant         | Constant                  | Constant                   |
-| **Adapter Weights**         | N/A             | 2 GB × 0.02 = 0.04 GB     | 2 GB × 0.02 = 0.04 GB      |
-| **Total**               | **12 GB**       | **2.24 GB**               | **1.24 GB**                |
+| Modules                 | Fully fine-tuned | Partial fine-tuned (LoRA) | QLoRA (INT8) | QLoRA (FP8) | QLoRA (FP4) |
+| ----------------------- | ---------------- | ------------------------- | ------------ | ----------- | ----------- |
+| **Model Weights**       | 2 GB             | 2 GB                      | 1 GB         | 1.5 GB      | 0.75 GB     |
+| **Gradient**            | 2 GB             | 0.04 GB                   | 0.04 GB      | 0.04 GB     | 0.04 GB     |
+| **Optimizer States**    | 8 GB             | 0.16 GB                   | 0.16 GB      | 0.16 GB     | 0.16 GB     |
+| **Others (Activation)** | Constant         | Constant                  | Constant     | Constant    | Constant    |
+| **Adapter Weights**     | N/A              | 0.04 GB                   | 0.04 GB      | 0.04 GB     | 0.04 GB     |
+| **Total**               | **12 GB**        | **2.24 GB**               | **1.24 GB**  | **1.78 GB** | **1.03 GB** |
+
 
 ### Example 2
 
 The table below summarizes the memory requirements for a 13B model under different scenarios:
 
-| **Aspect**                   | **FP32 (Standard)** | **FP16 (Mixed Precision)** | **INT8 (Quantized)** |
-|------------------------------|---------------------|----------------------------|----------------------|
-| **Model Parameters**         | 52 GB              | 26 GB                     | 13 GB               |
-| **Optimizer States**         | 104 GB             | 52 GB                     | N/A (not stored)    |
-| **Activation Memory**        | 50–80 GB           | 25–40 GB                  | 25–40 GB            |
-| **Total Memory per GPU**     | ~206 GB            | ~103 GB                   | ~38–53 GB           |
-| **Memory Reduction Factor**  | 1×                 | ~2×                       | ~4–6×               |
+| **Aspect**                  | **FP32 (Standard)** | **FP16 (Mixed Precision)** | **FP8**    | **FP4**    | **INT8 (Quantized)** |
+| --------------------------- | ------------------- | -------------------------- | ---------- | ---------- | -------------------- |
+| **Model Parameters**        | 52 GB               | 26 GB                      | 19.5 GB    | 13 GB      | 13 GB                |
+| **Optimizer States**        | 104 GB              | 52 GB                      | 39 GB      | 26 GB      | N/A (not stored)     |
+| **Activation Memory**       | 50–80 GB            | 25–40 GB                   | 18–32 GB   | 12–24 GB   | 25–40 GB             |
+| **Total Memory per GPU**    | \~206 GB            | \~103 GB                   | \~76–91 GB | \~51–63 GB | \~38–53 GB           |
+| **Memory Reduction Factor** | 1×                  | \~2×                       | \~2.7×     | \~4×       | \~4–6×               |
+
 
 
 
