@@ -25,6 +25,14 @@
         "author": "Genghua"
       },
       {
+        "title": "Data Structure Concepts",
+        "filename": "dataStructure.html",
+        "date": "2025-04-15",
+        "excerpt": "Machine Learning Compcets, including LLM, CV, Recs, and so on.",
+        "readingTime": 75,
+        "author": "Genghua"
+      },
+      {
         "title": "Language Model Training Resource Expectation",
         "filename": "llm_memory_estimations.html",
         "date": "2025-01-16",
